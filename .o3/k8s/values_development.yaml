@@ -1,0 +1,6 @@
+replicaCount: 1
+
+deploy:
+  env:
+    - name: API_ENV
+      value: 'development'

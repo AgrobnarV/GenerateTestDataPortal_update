@@ -1,0 +1,194 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Generate task from 1st service
+{% endblock %}
+
+{% block body %}
+<div class="container px-4 py-5" id="icon-grid"
+     xmlns="http://www.w3.org/1999/html">
+    <h2 class="pb-2 border-bottom">Create tasks</h2>
+    <div class="row">
+        <div class="col-sm">
+            <p></p>
+            <p></p>
+            <p></p>
+            <form>
+                <div class="form-group row">
+                    <label for="client_id" class="col-sm-4 col-form-label">Client ID</label>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="client_id"
+                               placeholder="123456">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <label for="local_warehouse_id"
+                           class="col-sm-4 col-form-label">Local warehouse ID</label>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="local_warehouse_id"
+                               placeholder="1234567890123">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <label for="type_id"
+                           class="col-sm-4 col-form-label">Type ID</label>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="type_id"
+                               placeholder="22548521448000">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <button type="button" class="col-sm-4 btn btn-outline-success" id="label_client_name">Client Name
+                    </button>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="client_name"
+                               value="Ben Stuart Little">
+                    </div>
+                </div>
+                <p></p>
+
+                <div class="form-group row">
+                    <button type="button" class="col-sm-4 btn btn-outline-success" id="label_coordinates">Task coordinates
+                    </button>
+                    <div class="col-sm-10 w-25">
+                        <input class="form-control" id="latitude"
+                               value="">
+                    </div>
+                    <div class="col-sm-10 w-25">
+                        <input class="form-control" id="longitude"
+                               value="">
+                    </div>
+                </div>
+                <p></p>
+
+                <div class="form-group row">
+                    <button type="button" class="col-sm-4 btn btn-outline-success" id="label_address">Task address
+                    </button>
+                    <div class="col-sm-10 w-50">
+                        <input type="text" class="form-control" id="address" placeholder="Task address"
+                               value="UK, London, Test Street, 2">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <label for="boxes_count"
+                           class="col-sm-4 col-form-label">Box count </label>
+                    <div class="col-sm-10 w-50">
+                        <input type="number" class="form-control" id="boxes_count" placeholder="Boxes count"
+                               value="1">
+                    </div>
+                </div>
+
+            </form>
+            <p></p>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button id="btn" class="btn btn-primary float-end"> Create </button>
+                </div>
+            </div>
+            <p></p>
+            <div id="log"></div>
+        </div>
+        <div class="col-sm">
+            <label class="col-sm-4 col-form-label">Click to warehouse for generate client tasks </label>
+            <div class="list-group">
+                <button type="button" id="Warehouse 1"
+                        class="list-group-item list-group-item-action"> Warehouse 1 123456789009
+                </button>
+                <button type="button" id="Warehouse 2"
+                        class="list-group-item list-group-item-action"> Warehouse 2 098765432122
+                </button>
+            </div>
+            <label class="col-sm-4 col-form-label">Clients</label>
+            <div class="list-group">
+                <button type="button" id="09872"
+                        class="list-group-item list-group-item-action"> Loui Haley
+                </button>
+                <button type="button" id="56781"
+                        class="list-group-item list-group-item-action"> Kajus Garner
+                </button>
+                <button type="button" id="34562"
+                        class="list-group-item list-group-item-action"> Dulcie Hood
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../static/1st_service_create_tasks.js"></script>
+<script src="../static/notifications.js"></script>
+<script>
+        document.getElementById('09872').onclick = function () {
+            document.getElementById('client_id').value = '09872'
+        };
+        document.getElementById('56781').onclick = function () {
+            document.getElementById('client_id').value = '56781'
+        };
+        document.getElementById('34562').onclick = function () {
+            document.getElementById('client_id').value = '34562'
+        };
+
+        document.getElementById('Warehouse 1').onclick = function () {
+            document.getElementById('local_warehouse_id').value = '123456789009';
+            document.getElementById('type_id').value = '1234';
+        };
+        document.getElementById('Warehouse 2').onclick = function () {
+            document.getElementById('local_warehouse_id').value = '098765432122';
+            document.getElementById('type_id').value = '5678';
+        };
+
+        function randomRange(min, max) {
+             let cal = (Math.random() * (max - min) + min);
+            return parseFloat(cal.toFixed(6));
+        }
+        document.getElementById('longitude').value = randomRange(37, 38);
+        document.getElementById('latitude').value = randomRange(55, 56);
+
+        function get_random (list) {
+             return list[Math.floor((Math.random()*list.length))];
+        }
+
+        function full_name () {
+            const names = ["John", "Peter", "Andrew", "David", "Michael", "William", "Alexander", "Christopher", "Matthew", "Daniel"];
+            const surnames = ["Smith", "Jones", "Williams", "Brown", "Davis", "Wilson", "Johnson", "Miller", "Taylor", "Moore"];
+
+            const name = names[Math.floor(Math.random() * names.length)];
+            const surname = surnames[Math.floor(Math.random() * surnames.length)];
+
+            return `${name} ${surname}`;
+        }
+
+        document.getElementById('client_name').value = full_name ()
+        document.getElementById('label_client_name').onclick = function () {
+           document.getElementById('client_name').value = full_name ()
+        };
+
+        function address() {
+          const countries = ["Russia", "United States", "China", "India", "Brazil"];
+          const cities = ["Moscow", "Saint Petersburg", "New York", "London", "Beijing"];
+          const streets = ["Lenin Street", "Pushkin Street", "Komsomolskaya Street", "Nezavisimosti Street", "Mira Street"];
+          const houseNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
+          const country = countries[Math.floor(Math.random() * countries.length)];
+          const city = cities[Math.floor(Math.random() * cities.length)];
+          const street = streets[Math.floor(Math.random() * streets.length)];
+          const houseNumber = houseNumbers[Math.floor(Math.random() * houseNumbers.length)];
+
+          return `${country}, ${city}, ${street}, ${houseNumber}`;
+        }
+
+        document.getElementById('address').value = address ()
+
+        document.getElementById('label_address').onclick = function () {
+           document.getElementById('address').value = address ()
+        };
+
+         document.getElementById('label_coordinates').onclick = function () {
+           document.getElementById('longitude').value = randomRange(37, 38);
+            document.getElementById('latitude').value = randomRange(55, 56);
+        };
+
+</script>
+{% endblock %}

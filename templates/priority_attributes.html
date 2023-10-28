@@ -1,0 +1,71 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Set priority's attribute for boxes
+{% endblock %}
+
+{% block body %}
+<div class="container px-4 py-5" id="icon-grid"
+     xmlns="http://www.w3.org/1999/html">
+    <h2 class="pb-2 border-bottom">Priority's attribute</h2>
+    <div class="row">
+        <div class="col-sm">
+            <p></p>
+            <p></p>
+            <p></p>
+            <form>
+                <div class="form-group row w-50">
+                    <label for="box_id" class="col-sm-4 col-form-label w-50">
+                        Enter box id
+                    </label>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="box_id"
+                               placeholder="12345678901234">
+                    </div>
+                </div>
+
+                <p></p>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                           value="priority_standard" checked>
+                    <label class="form-check-label" for="inlineRadio1">Standard priority</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                           value="priority_high">
+                    <label class="form-check-label" for="inlineRadio2">High priority</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                           value="priority_critical">
+                    <label class="form-check-label" for="inlineRadio3">Critical priority </label>
+                </div>
+            </form>
+            <p></p>
+            <div class="form-group row">
+                <div class="col-sm-10 w-50">
+                   <button id="btn" class="btn btn-primary float-end">
+                      <label for="btn">Change priority</label>
+                   </button>
+                </div>
+            </div>
+            <p></p>
+            <div id="log"></div>
+        </div>
+    </div>
+</div>
+<script src="../static/delivery_priority.js"></script>
+<script src="../static/notifications.js"></script>
+<script>
+    document.getElementById('box_id').addEventListener('input', function() {
+      const boxId = this.value;
+      if (!boxId.match(/^\d{12}$/)) {
+        this.setCustomValidity('Invalid box ID');
+        this.classList.add('is-invalid');
+      } else {
+        this.setCustomValidity('');
+        this.classList.remove('is-invalid');
+      }
+    });
+</script>
+{% endblock %}

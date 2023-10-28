@@ -1,0 +1,121 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Generate task from 2st service
+{% endblock %}
+
+{% block body %}
+<div class="container px-4 py-5" id="icon-grid"
+     xmlns="http://www.w3.org/1999/html">
+    <h2 class="pb-2 border-bottom">Create tasks</h2>
+    <p></p>
+    <div class="row">
+        <div class="col-sm">
+            <p></p>
+            <p></p>
+            <form class="form-floating">
+                <div class="form-group row">
+                    <label for="client_id" class="col-sm-4 col-form-label">Client ID</label>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="client_id"
+                               placeholder="123456">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <label for="client_id" class="col-sm-4 col-form-label">Payment type</label>
+                    <div class="col-sm-10 w-50">
+                        <select id="payment_type" class="form-select"
+                                aria-label="Default select example">
+                            <option selected value="Prepaid">Prepayment type
+                            </option>
+                            <option value="Postpaid">Postpayment type</option>
+                        </select>
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <label for="local_warehouse_id"
+                           class="col-sm-4 col-form-label">Local warehouse</label>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="local_warehouse_id"
+                               placeholder="12345678909876">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <label for="type_id"
+                           class="col-sm-4 col-form-label">Type ID</label>
+                    <div class="col-sm-10 w-50">
+                        <input class="form-control" id="type_id"
+                               placeholder="45645676567767">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                    <label for="boxes_count"
+                           class="col-sm-4 col-form-label">Box count </label>
+                    <div class="col-sm-10 w-50">
+                        <input type="number" class="form-control" id="boxes_count"
+                               placeholder="Boxes count" value="1">
+                    </div>
+                </div>
+            </form>
+            <p></p>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button id="btn" class="btn btn-primary float-end"> Create</button>
+                </div>
+            </div>
+            <p></p>
+            <div id="log"></div>
+        </div>
+        <div class="col-sm">
+            <label class="col-sm-4 col-form-label">Click to warehouse for generate client tasks </label>
+            <div class="list-group">
+                <button type="button" id="Warehouse 1"
+                        class="list-group-item list-group-item-action"> Warehouse 1 123456789009
+                </button>
+                <button type="button" id="Warehouse 2"
+                        class="list-group-item list-group-item-action"> Warehouse 2 098765432122
+                </button>
+            </div>
+            <label class="col-sm-4 col-form-label">Clients</label>
+            <div class="list-group">
+                <button type="button" id="09872"
+                        class="list-group-item list-group-item-action"> Loui Haley
+                </button>
+                <button type="button" id="56781"
+                        class="list-group-item list-group-item-action"> Kajus Garner
+                </button>
+                <button type="button" id="34562"
+                        class="list-group-item list-group-item-action"> Dulcie Hood
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../static/2st_service_create_tasks.js"></script>
+<script src="../static/notifications.js"></script>
+<script>
+    document.getElementById('09872').onclick = function () {
+        document.getElementById('client_id').value = '09872'
+    };
+    document.getElementById('56781').onclick = function () {
+        document.getElementById('client_id').value = '56781'
+    };
+    document.getElementById('34562').onclick = function () {
+        document.getElementById('client_id').value = '34562'
+    };
+
+    document.getElementById('Warehouse 1').onclick = function () {
+        document.getElementById('local_warehouse_id').value = '123456789009';
+        document.getElementById('type_id').value = '1234';
+    };
+    document.getElementById('Warehouse 2').onclick = function () {
+        document.getElementById('local_warehouse_id').value = '098765432122';
+        document.getElementById('type_id').value = '5678';
+    };
+
+</script>
+{% endblock %}

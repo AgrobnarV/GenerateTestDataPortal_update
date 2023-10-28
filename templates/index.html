@@ -1,0 +1,77 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Generate Test Data Portal
+{% endblock %}
+
+{% block body %}
+    <div class="container px-4 py-5" id="icon-grid">
+        <h2 class="pb-2 border-bottom">Generating data</h2>
+        <div class="row row-cols-1 row-cols-sm-2 g-4 py-5">
+            <div class="col d-flex align-items-start">
+                <svg class="bi text-muted flex-shrink-0 me-3" width="1.75em"
+                     height="1.75em">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <div>
+                    <h4 class="fw-bold mb-0">Client tasks</h4>
+                    <p></p>
+                    <a href="./lozon_task">Generate task from 1st service </a>
+                    <p></p>
+                    <a href="./oms_prepay_task">Generate tasks for 2st service </a>
+                    <p></p>
+                    <a href="./create_special_boxes">Special boxes tasks</a>
+                    <p></p>
+                    <a href="./new_article_boxes_task">Special carton tasks</a>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start">
+                <svg class="bi text-muted flex-shrink-0 me-3" width="1.75em"
+                     height="1.75em">
+                    <use xlink:href="#cpu-fill"></use>
+                </svg>
+                <div>
+                    <h4 class="fw-bold mb-0">Barcodes</h4>
+                    <p></p>
+                    <p><a href="./create_barcode">Generate barcode with boxes</a></p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start">
+                <svg class="bi text-muted flex-shrink-0 me-3" width="1.75em"
+                     height="1.75em">
+                    <use xlink:href="#cpu-fill"></use>
+                </svg>
+                <div>
+                    <h4 class="fw-bold mb-0">Маршрутный Лист</h4>
+                    <p></p>
+                    <p><a href="./ml_load">Выдача маршрутного листа</a></p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start">
+                <svg class="bi text-muted flex-shrink-0 me-3" width="1.75em"
+                     height="1.75em">
+                    <use xlink:href="#cpu-fill"></use>
+                </svg>
+                <div>
+                    <h4 class="fw-bold mb-0">Client's receipts</h4>
+                    <p></p>
+                    <p><a href="./receipt_creating">Create client's receipts</a></p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start">
+                <svg class="bi text-muted flex-shrink-0 me-3" width="1.75em"
+                     height="1.75em">
+                    <use xlink:href="#cpu-fill"></use>
+                </svg>
+                <div>
+                    <h4 class="fw-bold mb-0">Attributes</h4>
+                    <p></p>
+                    <p><a href="./set_priority">Priority attribute</a></p>
+                    <p></p>
+                    <p><a href="./route_article_attribute_add">Other attributes</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

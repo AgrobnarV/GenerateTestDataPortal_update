@@ -1,0 +1,77 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Set other attributes for boxes
+{% endblock %}
+
+<div
+        class="container px-4 py-5"
+        id="icon-grid"
+        xmlns="http://www.w3.org/1999/html">
+    <h2 class="pb-2 border-bottom">Other's attributes</h2>
+    <div class="row">
+        <div class="col-sm">
+            <p></p>
+            <form>
+                <div class="form-group row">
+                    <label for="box_id" class="col-sm-4 col-form-label">
+                        Enter box id
+                    </label>
+                    <div class="col-sm-10 w-50">
+                        <input
+                                class="form-control"
+                                id="box_id"
+                                placeholder="first,second"
+                        />
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="adult" value="option1">
+                    <label class="form-check-label" for="adult">Type 1</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="alcohol" value="option2">
+                    <label class="form-check-label" for="alcohol">Type 2</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="by_door" value="option3">
+                    <label class="form-check-label" for="by_door">Type 3</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="premium" value="option4">
+                    <label class="form-check-label" for="premium">Type 4</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="jewellery" value="option5">
+                    <label class="form-check-label" for="jewellery">Type 5</label>
+                </div>
+            </form>
+            <p></p>
+            <div class="form-group row">
+                <div class="col-sm-10 w-50">
+                    <button id="btn" class="btn btn-primary float-end">
+                        <label for="btn">Change box attributes</label>
+                    </button>
+                </div>
+            </div>
+            <p></p>
+            <div id="log"></div>
+        </div>
+    </div>
+</div>
+<script src="../static/other_attributes.js"></script>
+<script src="../static/notifications.js"></script>
+<script>
+    document.getElementById('box_id').addEventListener('input', function() {
+      const boxId = this.value;
+      if (!boxId.match(/^\d{12}$/)) {
+        this.setCustomValidity('Invalid box ID');
+        this.classList.add('is-invalid');
+      } else {
+        this.setCustomValidity('');
+        this.classList.remove('is-invalid');
+      }
+    });
+</script>
+{% endblock %}

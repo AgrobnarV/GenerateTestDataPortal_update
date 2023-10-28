@@ -1,0 +1,110 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Create payment receipts
+{% endblock %}
+
+{% block body %}
+    <div class="container px-4 py-5" id="icon-grid"
+         xmlns="http://www.w3.org/1999/html">
+        <h2 class="pb-2 border-bottom">Create payment receipts</h2>
+        <div class="row">
+            <div class="col-sm">
+                <p></p>
+                <p></p>
+                <p></p>
+                <form>
+                    <div class="form-group row">
+                        <label for="paymentId" class="col-sm-4 col-form-label">
+                            Payment ID
+                        </label>
+                        <div class="col-sm-10 w-50">
+                            <input class="form-control" name="paymentId" id="paymentId"
+                                   placeholder="123456" required>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="form-group row">
+                        <label for="receiptId" class="col-sm-4 col-form-label">
+                            Payment receipt ID
+                        </label>
+                        <div class="col-sm-10 w-50">
+                            <input class="form-control" name="receiptId" id="receiptId"
+                                   placeholder="123456" required>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="form-group row">
+                        <label for="CreatedData" class="col-sm-4 col-form-label">
+                            Created data
+                        </label>
+                        <div class="col-sm-10 w-50">
+                            <input class="form-control" name="CreatedData" id="CreatedData"
+                                   placeholder="2023-01-01-00-00-00" required>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="form-group row">
+                        <label for="UpdatedData" class="col-sm-4 col-form-label">
+                            Updated Data
+                        </label>
+                        <div class="col-sm-10 w-50">
+                            <input class="form-control" name="UpdatedData" id="UpdatedData"
+                                   placeholder="2023-01-01-00-00-00" required>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="form-group row">
+                        <label for="salaryType" class="col-sm-4 col-form-label">
+                            Salary types
+                        </label>
+                        <div class="col-sm-10 w-50">
+                            <select class="form-select" name="salaryType" id="salaryType" required>
+                                <option selected value="Individual">
+                                    Individual
+                                </option>
+                                <option value="Legal">
+                                    Legal
+                                </option>
+                                <option value="Other">
+                                    None (Other)
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="form-group row">
+                        <label for="receiptLink" class="col-sm-4 col-form-label">
+                            Receipt's link url
+                        </label>
+                        <div class="col-sm-10 w-50">
+                            <input class="form-control" id="receiptLink"
+                                   placeholder="image.jpg">
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="form-group row">
+                        <label for="paymentBody" class="col-sm-4 col-form-label">
+                            Payment receipt's body
+                        </label>
+                        <div class="col-sm-10 w-50">
+                            <input class="form-control" id="paymentBody"
+                                   placeholder='[{"name": "string", "sum": {"value": "string"}}]'>
+                        </div>
+                    </div>
+                    <p></p>
+                </form>
+                <p></p>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button id="btn" class="btn btn-primary float-end"> Create </button>
+                    </div>
+                </div>
+                <p></p>
+                <div id="log"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../static/create_receipt.js"></script>
+    <script src="../static/notifications.js"></script>
+{% endblock %}

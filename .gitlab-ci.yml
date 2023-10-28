@@ -1,0 +1,14 @@
+include:
+  - project: pub/ci
+    ref: 0.0.5
+    file: /.common.gitlab-ci.yml
+
+variables:
+  NAMESERVICE: generate_test_data_portal
+  NAMESPACE: GeneratePortal
+  MIGRATION: "yes"
+  # Jira project where releases will be created
+  JIRA_PROJECT: GTD
+  # Jira project prefix
+  JIRA_VERSION_PREFIX: GTD
+  JIRA_PROJECT_ID: 1234

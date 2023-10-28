@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  pullPolicy: Always
+
+readinessProbe: {}
+livelinessProbe: {}
+
+service:
+  type: ClusterIP
+  monitoringScope: pythonapi
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000

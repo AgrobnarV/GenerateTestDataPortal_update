@@ -1,0 +1,57 @@
+{% extends  'base.html' %}
+
+{% block title %}
+    Create barcode for return tasks
+{% endblock %}
+
+{% block body %}
+    <div class="container px-4 py-5" id="icon-grid"
+         xmlns="http://www.w3.org/1999/html">
+        <h2 class="pb-2 border-bottom">Create barcode</h2>
+        <div class="row row-cols-1">
+
+            <form>
+                <div class="form-row w-25">
+                    <div class="col">
+                        <label>Route</label>
+                        <input type="text" class="form-control"
+                               placeholder="77777777777777" id="route_id">
+                    </div>
+                    <div class="col">
+                        <label>Local warehouse ID</label>
+                        <input type="text" class="form-control"
+                               placeholder="88888888888888" id="local_warehouse_id">
+                    </div>
+                    <div class="col">
+                        <label>Type ID</label>
+                        <input type="text" class="form-control"
+                               placeholder="99999999999999" id="type_id">
+                    </div>
+                    <div class="col">
+                        <label>Enter the carton's quantity</label>
+                        <input type="text" class="form-control" autofocus
+                               value="1"
+                               id="cartons">
+                    </div>
+                    <div class="col">
+                        <label>Enter the box's quantity</label>
+                        <input type="text" class="form-control"
+                               value="1"
+                               id="boxes">
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group row">
+                <div class="col-sm-10">
+                    <button id="btn" class="btn btn-primary float-end"> Create </button>
+                </div>
+            </div>
+            </form>
+            <div id="log"></div>
+        </div>
+        <svg id="barcode"></svg>
+    </div>
+    <script src="../static/special_boxes_task.js"></script>
+    <script src="../static/notifications.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+{% endblock %}
