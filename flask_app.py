@@ -1,7 +1,6 @@
-import os
 from datetime import datetime
 
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request
 from loguru import logger
 
 from api import backend_methods as task
@@ -18,49 +17,49 @@ def index():
 
 
 @logger.catch
-@app.route('/lozon_task')
+@app.route('/create_tasks_first_service')
 def first_service_create_tasks_sock():
     return render_template('first_service_create_tasks.html')
 
 
 @logger.catch
-@app.route('/oms_prepay_task')
+@app.route('/create_tasks_second_service')
 def second_service_create_tasks_sock():
     return render_template('second_service_create_tasks.html')
 
 
 @logger.catch
-@app.route('/carriage_with_containers')
+@app.route('/create_tasks_third_service')
+def third_service_create_tasks_sock():
+    return render_template('third_service_create_tasks.html')
+
+
+@logger.catch
+@app.route('/create_tasks_forth_service')
+def forth_service_create_tasks_sock():
+    return render_template('forth_service_create_tasks.html')
+
+
+@logger.catch
+@app.route('/create_barcode')
 def carriage_barcode_sock():
     return render_template('create_barcode.html')
 
 
 @logger.catch
-@app.route('/ml_load')
-def ml_load():
+@app.route('/load_route_list')
+def load_route_list_sock():
     return render_template('load_route_list.html')
 
 
 @logger.catch
-@app.route('/delivery_priority')
-def delivery_priority():
+@app.route('/update_priority_attribute')
+def update_priority_attribute_sock():
     return render_template('priority_attributes.html')
 
 
 @logger.catch
-@app.route('/article_boxes_task')
-def article_boxes_task():
-    return render_template('forth_service_create_tasks.html')
-
-
-@logger.catch
-@app.route('/new_article_boxes_task')
-def new_article_boxes_task():
-    return render_template('third_service_create_tasks.html')
-
-
-@logger.catch
-@app.route('/route_article_attribute_add')
+@app.route('/add_other_priority')
 def route_article_attribute_add():
     return render_template('other_attributes.html')
 
@@ -72,8 +71,8 @@ def receipt_creating_rout():
 
 
 @logger.catch
-@app.route('/create_ml_load')
-def create_ml_load():
+@app.route('/create_route_lists')
+def create_route_lists():
     _id = request.args.get('ids', '')
     if '-' in _id:
         _id = _id.split('-')[1]
@@ -81,15 +80,15 @@ def create_ml_load():
 
 
 @logger.catch
-@app.route('/route_set_article_attribute')
-def route_set_article_attribute():
-    posting_ids = request.args.get('posting_ids', '').split(',')
+@app.route('/add_other_priority')
+def add_other_priority():
+    box_ids = request.args.get('box_ids', '').split(',')
     attrs = {
-        "adult": request.args.get('adult'),
-        "alkohole": request.args.get('alkohole'),
-        "to_door": request.args.get('to_door'),
-        "premium": request.args.get('premium'),
-        "jeweler": request.args.get('jeweler')
+        "Type 1": request.args.get('Type 1'),
+        "Type 2": request.args.get('Type 2'),
+        "Type 3": request.args.get('Type 3'),
+        "Type 4": request.args.get('Type 4'),
+        "Type 5": request.args.get('Type 5')
     }
     attributes = list(
         map(
@@ -97,518 +96,456 @@ def route_set_article_attribute():
             attrs.values()
         )
     )
-    if len(posting_ids) > 0 and any(attributes):
-        return task.add_other_priority(posting_ids, attrs)
+    if len(box_ids) > 0 and any(attributes):
+        return task.add_other_priority(box_ids, attrs)
     else:
         return (
-            f"Неверный формат данных posting_ids={request.args.get('posting_ids', '')}, "
+            f"Wrong format type box_ids={request.args.get('box_ids', '')}, "
             f"attrs={attrs}",
             400
         )
 
 
 @logger.catch
-@app.route('/lozon_delivery')
-def lozon_delivery():
+@app.route('/create_tasks_first_service')
+def update_first_service_create_tasks():
     date_time = date_now()
-    postings_list = []
-    courier = request.args.get('courier', "")
-    start_place_id = request.args.get('start_place_id', "")
-    delivery_variant_id = request.args.get('delivery_variant_id', "")
+    client_id = request.args.get('client_id', "")
+    local_warehouse_id = request.args.get('local_warehouse_id', "")
+    type_id = request.args.get('type_id', "")
     client_name = request.args.get('client_name', "")
     longitude = request.args.get('longitude', "")
     latitude = request.args.get('latitude', "")
     address = request.args.get('address', "")
-    posting_count = int(request.args.get('posting_count', ""))
-    scan_it = request.args.get('scanit') == "true"
-    if courier == "":
-        return "Заполните курьера", 400
+    boxes_count = int(request.args.get('boxes_count', ""))
+    if client_id == "":
+        return "Enter the client_id", 400
 
-    posting = task.update_first_service_create_tasks(
-        boxes_count=posting_count,
-        local_warehouse_id=int(start_place_id),
-        delivery_variant_id=int(delivery_variant_id),
-        scan_it=scan_it,
+    boxes = task.update_first_service_create_tasks(
+        boxes_count=boxes_count,
+        local_warehouse_id=int(local_warehouse_id),
+        delivery_variant_id=int(type_id),
         client_name=client_name,
         latitude=latitude,
         longitude=longitude,
         address=address
     )
-    postings_list = posting["posting"]
+    boxes_list = boxes["boxes"]
     sleep_timer(2)
-    moving_postings = task.change_status_for_boxes(postings_list, start_place_id)
+    moving_boxes = task.change_status_for_boxes(boxes_list, local_warehouse_id)
     sleep_timer(2)
-    route_sheet = task.create_route_lists(
-        courier,
-        postings_list,
+    route_list = task.create_route_lists(
+        client_id,
+        boxes_list,
         date_time,
-        start_place_id
+        local_warehouse_id
     )
-    if route_sheet["status"] != 201:
-        return f"{route_sheet}", 400
+    if route_list["status"] != 201:
+        return f"{route_list}", 400
     sleep_timer(7)
     give_out = task.short_giveout_route_lists(
-        postings_list, route_sheet["lozonRouteSheetId"],
-        route_sheet["trolizonRouteSheetId"],
-        start_place_id
+        boxes_list, route_list["RouteListId"],
+        local_warehouse_id
     )
     if give_out["status"] != 200:
         return {
             "responses": {
-                "posting": posting,
-                "moving_postings": moving_postings,
-                "route_sheet": route_sheet
+                "boxes": boxes,
+                "moving_boxes": moving_boxes,
+                "route_list": route_list
             },
             "give_out": give_out
         }, 400
     logger.debug({
         "responses": {
-            "posting": posting,
-            "moving_postings": moving_postings,
-            "route_sheet": route_sheet,
+            "boxes": boxes,
+            "moving_boxes": moving_boxes,
+            "route_list": route_list,
             "give_out": give_out
         }
     })
     return {
-        "posting_id": ', '.join(str(x) for x in postings_list),
-        "route_sheet_id": route_sheet["trolizonRouteSheetId"]
+        "boxes_id": ', '.join(str(x) for x in boxes_list)
     }
 
 
 @logger.catch
-@app.route('/oms_prepay_delivery')
-def oms_prepay_delivery():
+@app.route('/create_tasks_second_service')
+def create_tasks_second_service():
     date_time = date_now()
-    postings_list = []
-    courier = request.args.get('courier', '')
-    start_place_id = request.args.get('start_place_id', '')
+    boxes_list = []
+    client = request.args.get('client', '')
+    local_warehouse_id = request.args.get('local_warehouse_id', '')
     payment_type = request.args.get('payment_type', '')
-    delivery_variant_id = request.args.get('delivery_variant_id', '')
-    posting_count = int(request.args.get('posting_count', ''))
-    if courier == "":
-        return "Заполните курьера", 400
+    type_id = request.args.get('type_id', '')
+    boxes_count = int(request.args.get('boxes_count', ''))
+    if client == "":
+        return "Enter the client_id", 400
     timeslot_response = task.get_time_ranges(
-        delivery_variants_id=int(delivery_variant_id)
+        type_id=int(type_id)
     )
     timeslot = timeslot_response["timeSlots"]
 
     logger.debug(
-        f"{courier}, "
-        f"{start_place_id}, "
-        f"{delivery_variant_id}, "
-        f"{posting_count}, "
+        f"{client}, "
+        f"{local_warehouse_id}, "
+        f"{type_id}, "
+        f"{boxes_count}, "
         f"{timeslot}"
     )
-    create_posting_oms_responses = []
-    moving_posting_responses = []
-    for _ in range(posting_count):
-        posting = task.create_tasks_second_service(
-            delivery_variant_id=delivery_variant_id, timeslot_id=timeslot,
+    create_tasks_second_service_responses = []
+    moving_boxes_responses = []
+    for _ in range(boxes_count):
+        box = task.create_tasks_second_service(
+            type_id=type_id, timeslot_id=timeslot,
             payment_type=payment_type
         )
-        if posting["status"] != 201:
-            return f"{posting}", 400
+        if box["status"] != 201:
+            return f"{box}", 400
         sleep_timer(2)
-        create_posting_oms_responses.append(posting)
-        moving_posting_responses.append(
-            task.change_status_for_box(str(posting["postingId"]), int(start_place_id))
+        create_tasks_second_service_responses.append(box)
+        moving_boxes_responses.append(
+            task.change_status_for_box(str(box["boxId"]), int(local_warehouse_id))
         )
-        postings_list.append(str(posting["postingId"]))
+        boxes_list.append(str(box["boxId"]))
     sleep_timer(3)
-    route_sheet = task.create_route_lists(
-        courier, postings_list, date_time, start_place_id
+    route_list = task.create_route_lists(
+        client, boxes_list, date_time, local_warehouse_id
     )
     sleep_timer(5)
     give_out = task.short_giveout_route_lists(
-        postings_list, route_sheet["lozonRouteSheetId"],
-        route_sheet["trolizonRouteSheetId"],
-        start_place_id
+        boxes_list, route_list["RouteListId"],
+        local_warehouse_id
     )
     if give_out["status"] != 200:
         return {
             "responses": {
                 "timeslot": timeslot_response,
-                "create_posting_oms": create_posting_oms_responses,
-                "moving_posting": moving_posting_responses,
-                "route_sheet": route_sheet
+                "create_tasks_second_service": create_tasks_second_service_responses,
+                "moving_boxes": moving_boxes_responses,
+                "route_list": route_list
             },
             "give_out": give_out
         }, 400
     logger.debug({
         "responses": {
             "timeslot": timeslot_response,
-            "create_posting_oms": create_posting_oms_responses,
-            "moving_posting": moving_posting_responses,
-            "route_sheet": route_sheet,
+            "create_tasks_second_service": create_tasks_second_service_responses,
+            "moving_boxes": moving_boxes_responses,
+            "route_list": route_list,
             "give_out": give_out
         }
     })
     return {
-        "posting_id": postings_list,
-        "route_sheet_id": route_sheet["trolizonRouteSheetId"]
+        "box_id": boxes_list
     }
 
 
 @logger.catch
-@app.route('/create_carriage_with_containers')
-def create_carriage_with_containers():
-    containers_count = int(request.args.get('count', ''))
-    postings_count = int(request.args.get('postings_count', ''))
-    route = int(request.args.get('route', ''))
-    start_place_id = int(request.args.get('start_place_id', ''))
-    delivery_variant_id = int(request.args.get('delivery_variant_id', ''))
-    postings_name = []
+@app.route('/create_barcode')
+def create_barcode():
+    global boxes, boxes_response, add_boxes_to_special_boxes, special_box, append_boxes_to_special_boxes
+    cartoons_count = int(request.args.get('count', ''))
+    boxes_count = int(request.args.get('boxes_count', ''))
+    route_id = int(request.args.get('route_id', ''))
+    local_warehouse_id = int(request.args.get('local_warehouse_id', ''))
+    type_id = int(request.args.get('type_id', ''))
+    boxes_name = ()
     date_time = datetime.now()
     date_time = date_time.strftime("%Y-%m-%dT00:00:00")
-    new_carriage = task.create_special_boxes(route, date_time)
-    postings = None
-    postings_reponses = None
-    add_posting_to_carriage = None
-    postings_carriage = None
-    append_postings_to_carriages = None
-    if new_carriage["status"] == 201:
-        new_carriage = new_carriage["carriage"]
+    new_special_box = task.create_special_boxes(route_id, date_time)
+    if new_special_box["status"] == 201:
+        new_special_box = new_special_box["special_box"]
     else:
-        return f"{new_carriage}", 400
-    if containers_count > 0:
+        return f"{new_special_box}", 400
+    if cartoons_count > 0:
         sleep_timer(2)
-        postings = task.create_tasks_third_service(
-            posting_count=containers_count, start_place_id=start_place_id,
-            delivery_variant_id=delivery_variant_id
+        boxes = task.create_tasks_third_service(
+            box_count=cartoons_count, local_warehouse_id=local_warehouse_id,
+            type_id=type_id
         )
-        postings_reponses = []
-        for posting in postings["posting"]:
-            container = task.create_pallets(new_carriage)
-            if container["status"] != 200:
-                return f"{container}", 400
-            posting_name = task.get_boxes_name(posting)
-            if posting_name["status"] == 200:
-                posting_name = posting_name["names"]
+        boxes_response = []
+        for box in boxes["box"]:
+            special_box = task.create_pallets(new_special_box)
+            if special_box["status"] != 200:
+                return f"{special_box}", 400
+            box_name = task.get_boxes_name(box)
+            if box_name["status"] == 200:
+                box_name = box_name["names"]
             else:
-                return f"{container}", 400
-            postings_reponses.append([container, posting_name])
-            postings_name.append(posting_name['posting']['name'])
-        logger.debug(postings_name)
+                return f"{special_box}", 400
+            boxes_response.append([special_box, box_name])
+            boxes_name.append(box_name['box']['name'])
+        logger.debug(boxes_name)
         sleep_timer(6)
-        add_posting_to_carriage = task.add_boxes_to_special_boxes(
-            new_carriage,
-            postings_name
+        add_boxes_to_special_boxes = task.add_boxes_to_special_boxes(
+            new_special_box,
+            boxes_name
         )
-    if postings_count > 0:
-        postings_carriage = task.create_tasks_third_service(
-            posting_count=postings_count, start_place_id=start_place_id,
-            delivery_variant_id=delivery_variant_id
+    if boxes_count > 0:
+        special_box = task.create_tasks_third_service(
+            boxes_count=boxes_count, local_warehouse_id=local_warehouse_id,
+            type_id=type_id
         )
         sleep_timer(2)
-        append_postings_to_carriages = task.get_boxes_within_special_boxes(
-            postings_carriage["posting"], new_carriage
+        append_boxes_to_special_boxes = task.get_boxes_within_special_boxes(
+            special_box["box"], new_special_box
         )
         sleep_timer(3)
-    approve_carriage = task.approve_special_boxes_into_warehouse(new_carriage)
-    new_carriage = f"%303%{str(new_carriage)[:12]}"
+    approve_special_box = task.approve_special_boxes_into_warehouse(new_special_box)
+    new_special_box = f"%1%{str(new_special_box)[:12]}"
     logger.debug({
-        "barcode": new_carriage,
+        "barcode": new_special_box,
         "responses": {
-            "new_carriage": new_carriage,
-            "postings": postings or "",
-            "postings_reponses": postings_reponses or "",
-            "add_posting_to_carriage": add_posting_to_carriage or "",
-            "postings_carriage": postings_carriage or "",
-            "append_postings_to_carriages": append_postings_to_carriages or "",
-            "approve_carriage": approve_carriage,
+            "new_special_box": new_special_box,
+            "boxes": boxes or "",
+            "boxes_response": boxes_response or "",
+            "add_boxes_to_special_boxes": add_boxes_to_special_boxes or "",
+            "special_box": special_box or "",
+            "append_boxes_to_special_boxes": append_boxes_to_special_boxes or "",
+            "approve_special_box": approve_special_box,
         }
     })
-    return new_carriage
+    return new_special_box
 
 
 @logger.catch
-@app.route('/article_boxes_delivery')
-def article_boxes_delivery():
+@app.route('/forth_service_create_tasks')
+def create_tasks_forth_service():
+    global append_boxes
     date_time = date_now()
-    containers_list = []
-    courier = request.args.get('courier', '')
-    start_place_id = request.args.get('start_place_id', '')
-    delivery_variant_id = request.args.get('delivery_variant_id', '')
-    dst_place_id = int(request.args.get('dst_place_id', ''))
-    posting_count = int(request.args.get('posting_count', ""))
-    scan_it_in_article_box = request.args.get('scan_it_in_article_box') == "true"
-    if courier == "":
-        return "Заполните курьера", 400
-    posting = task.create_tasks_first_service(
-        boxes_count=posting_count,
-        start_place_id=int(start_place_id),
-        type_id=int(delivery_variant_id),
-        scan_it=scan_it_in_article_box
+    cartoons_list = []
+    client_id = request.args.get('client_id', '')
+    local_warehouse_id = request.args.get('local_warehouse_id', '')
+    type_id = request.args.get('type_id', '')
+    warehouse_place_id = int(request.args.get('warehouse_place_id', ''))
+    boxes_count = int(request.args.get('box_count', ""))
+    if client_id == "":
+        return "Enter the client id", 400
+    box = task.create_tasks_forth_service(
+        boxes_count=boxes_count,
+        local_warehouse_id=int(local_warehouse_id),
+        type_id=int(type_id),
     )
-    if posting["status"] != 201:
-        return f"{posting}", 400
-    postings_list = posting["posting"]
-    logger.debug(postings_list)
+    if box["status"] != 201:
+        return f"{box}", 400
+    boxes_list = box["box"]
+    logger.debug(boxes_list)
     sleep_timer(2)
-    article_boxes = task.create_pallets_boxes(start_place_id, dst_place_id)
+    article_boxes = task.create_pallets_boxes(local_warehouse_id, warehouse_place_id)
 
     if article_boxes["status"] != 201:
         return f"{article_boxes}", 400
     sleep_timer(2)
-    # append_postings = task.append_postings_to_containers(
-    #     posting_id, article_boxes["article_boxes"]
-    # )
-    # if append_postings["status"] != 201:
-    #     return f"{append_postings}", 400
-    for posting in postings_list:
-        append_postings = task.append_boxes_to_special_boxes(
-            posting, article_boxes["article_boxes"]
+    for box in boxes_list:
+        append_boxes = task.append_boxes_to_special_boxes(
+            box, article_boxes["article_boxes"]
         )
-        if append_postings["status"] != 201:
-            return f"{append_postings}", 400
+        if append_boxes["status"] != 201:
+            return f"{append_boxes}", 400
     sleep_timer(2)
     articles_state = task.change_special_boxes_state(article_boxes["article_boxes"])
     sleep_timer(2)
-    moving_posting_reposne = task.change_status_for_box(
+    moving_boxes_response = task.change_status_for_box(
         article_boxes["article_boxes"],
-        int(start_place_id)
+        int(local_warehouse_id)
     )
     if articles_state["status"] != 200:
         return f"{article_boxes}", 400
-    # postings_list = [posting_id]
-    logger.debug(request.args.get('add_posting'))
-    logger.debug(request.args.get('add_posting') == "true")
+    logger.debug(request.args.get('add_boxes'))
+    logger.debug(request.args.get('add_boxes') == "true")
 
-    postings_reponses = []
-    moving_posting_reponses = []
-    if request.args.get('add_posting') == "true":
-        posting = task.create_tasks_first_service(
-            boxes_count=1, start_place_id=int(start_place_id),
-            type_id=int(delivery_variant_id)
+    boxes_response = []
+    moving_boxes_response = []
+    if request.args.get('add_boxes') == "true":
+        box = task.create_tasks_forth_service(
+            boxes_count=1, local_warehouse_id=int(local_warehouse_id),
+            type_id=int(type_id)
         )
-        if posting["status"] != 201:
-            return f"{posting}", 400
+        if box["status"] != 201:
+            return f"{box}", 400
         sleep_timer(2)
-        postings_reponses.append(posting)
-        moving_posting_reponses.append(
+        boxes_response.append(box)
+        moving_boxes_response.append(
             task.change_status_for_box(
-                str(posting["posting"][0]), int(start_place_id)
+                str(box["box"][0]), int(local_warehouse_id)
             )
         )
-        containers_list.append(str(posting["posting"][0]))
-        postings_list.append(str(posting["posting"][0]))
-    logger.debug(request.args.get('scan_it'))
-    logger.debug(request.args.get('scan_it') == "true")
-    if request.args.get('scan_it') == "true":
-        posting = task.create_tasks_first_service(
-            boxes_count=1, start_place_id=int(start_place_id),
-            type_id=int(delivery_variant_id), scan_it=True
-        )
-        if posting["status"] != 201:
-            return f"{posting}", 400
-        sleep_timer(2)
-        postings_reponses.append(posting)
-        moving_posting_reponses.append(
-            task.change_status_for_box(
-                str(posting["posting"][0]), int(start_place_id)
-            )
-        )
-        containers_list.append(str(posting["posting"][0]))
-        postings_list.append(str(posting["posting"][0]))
+        cartoons_list.append(str(box["cartoon"][0]))
+        boxes_list.append(str(box["box"][0]))
     sleep_timer(5)
-    route_sheet = task.create_route_lists(
-        courier, postings_list, date_time, start_place_id
+    route_list = task.create_route_lists(
+        client_id, boxes_list, date_time, local_warehouse_id
     )
-    if route_sheet["status"] != 201:
-        return f"{route_sheet}", 400
+    if route_list["status"] != 201:
+        return f"{route_list}", 400
     sleep_timer(5)
-    containers_list.append(str(article_boxes["article_boxes"]))
+    cartoons_list.append(str(article_boxes["article_boxes"]))
 
     give_out = task.short_giveout_route_lists(
-        containers_list, route_sheet["lozonRouteSheetId"],
-        route_sheet["trolizonRouteSheetId"],
-        start_place_id
+        cartoons_list, route_list["RouteListId"],
+        local_warehouse_id
     )
     if give_out["status"] != 200:
         return f"{give_out}", 400
     logger.debug({
         "responses": {
-            "posting": posting,
+            "box": box,
             "article_boxes": article_boxes,
-            "append_postings": append_postings,
+            "append_boxes": append_boxes,
             "articles_state": articles_state,
-            "moving_posting_reposne": moving_posting_reposne,
-            "postings_reponses": postings_reponses,
-            "moving_posting_reponses": moving_posting_reponses,
-            "route_sheet": route_sheet,
+            "moving_boxes_response": moving_boxes_response,
+            "boxes_response": boxes_response,
+            "route_list": route_list,
             "give_out": give_out
         }
     })
     return {
-        "posting_id": postings_list,
-        "route_sheet_id": route_sheet["trolizonRouteSheetId"]
+        "box_id": boxes_list
     }
 
 
 @logger.catch
-@app.route('/set_delivery_priority')
-def set_delivery_priority():
-    posting_id = request.args.get('posting_id', '')
+@app.route('/update_priority_attribute')
+def update_priority_attribute():
+    box_id = request.args.get('box_id', '')
     priority = request.args.get('priority', '')
-    if posting_id == "":
-        return "Введите ID постинга", 400
-    posting_name = task.get_boxes_name(
-        posting_id)["names"]['posting']['name']
-    return task.update_priority_attribute(posting_name, priority)
+    if box_id == "":
+        return "Enter box id", 400
+    box_name = task.get_boxes_name(
+        box_id)["names"]['box']['name']
+    return task.update_priority_attribute(box_name, priority)
 
 
 @logger.catch
-@app.route('/new_article_boxes_delivery')
-def new_article_boxes_delivery():
+@app.route('/forth_service_create_tasks')
+def create_tasks_forth_service():
+    global append_postings
     date_time = date_now()
-    containers_list = []
-    courier = request.args.get('courier', '')
-    start_place_id = request.args.get('start_place_id', '')
-    delivery_variant_id = request.args.get('delivery_variant_id', '')
-    dst_place_id = int(request.args.get('dst_place_id', ''))
-    posting_count = int(request.args.get('posting_count', ""))
-    scan_it_in_article_box = request.args.get('scan_it_in_article_box') == "true"
-    if courier == "":
-        return "Заполните курьера", 400
-    posting = task.create_tasks_first_service(
-        boxes_count=posting_count,
-        start_place_id=int(start_place_id),
-        type_id=int(delivery_variant_id),
-        scan_it=scan_it_in_article_box
+    cartoon_list = []
+    client_id = request.args.get('client_id', '')
+    local_warehouse_id = request.args.get('local_warehouse_id', '')
+    type_id = request.args.get('type_id', '')
+    warehouse_place_id = int(request.args.get('warehouse_place_id', ''))
+    box_count = int(request.args.get('box_count', ""))
+    if client_id == "":
+        return "Enter the client id", 400
+    box_id = task.create_tasks_forth_service(
+        boxes_count=box_count,
+        local_warehouse_id=int(local_warehouse_id),
+        type_id=int(type_id),
     )
-    if posting["status"] != 201:
-        return f"{posting}", 400
-    postings_list = posting["posting"]
-    logger.debug(postings_list)
-    article_boxes = task.create_pallets_boxes(start_place_id, dst_place_id)
+    if box_id["status"] != 201:
+        return f"{box_id}", 400
+    boxes_list = box_id["box_id"]
+    logger.debug(boxes_list)
+    article_boxes = task.create_pallets_boxes(local_warehouse_id, warehouse_place_id)
 
     if article_boxes["status"] != 201:
         return f"{article_boxes}", 400
     sleep_timer(2)
-    for posting in postings_list:
+    for box_id in boxes_list:
         append_postings = task.append_boxes_to_special_boxes(
-            posting, article_boxes["article_boxes"]
+            box_id, article_boxes["article_boxes"]
         )
         if append_postings["status"] != 201:
             return f"{append_postings}", 400
     sleep_timer(2)
     articles_state = task.change_special_boxes_state(article_boxes["article_boxes"])
     sleep_timer(2)
-    moving_posting_reposne = task.change_status_for_box(
+    moving_box_response = task.change_status_for_box(
         article_boxes["article_boxes"],
-        int(start_place_id)
+        int(local_warehouse_id)
     )
     if articles_state["status"] != 200:
         return f"{article_boxes}", 400
-    logger.debug(request.args.get('add_posting'))
-    logger.debug(request.args.get('add_posting') == "true")
+    logger.debug(request.args.get('add_box'))
+    logger.debug(request.args.get('add_box') == "true")
 
-    postings_reponses = []
-    moving_posting_reponses = []
-    if request.args.get('add_posting') == "true":
-        posting = task.create_tasks_first_service(
-            boxes_count=1, start_place_id=int(start_place_id),
-            type_id=int(delivery_variant_id)
+    boxes_response = []
+    moving_boxes_response = []
+    if request.args.get('add_box') == "true":
+        box_id = task.create_tasks_forth_service(
+            boxes_count=1, local_warehouse_id=int(local_warehouse_id),
+            type_id=int(type_id)
         )
-        if posting["status"] != 201:
-            return f"{posting}", 400
+        if box_id["status"] != 201:
+            return f"{box_id}", 400
         sleep_timer(2)
-        postings_reponses.append(posting)
-        moving_posting_reponses.append(
+        boxes_response.append(box_id)
+        moving_boxes_response.append(
             task.change_status_for_box(
-                str(posting["posting"][0]), int(start_place_id)
+                str(box_id["box_id"][0]), int(local_warehouse_id)
             )
         )
-        containers_list.append(str(posting["posting"][0]))
-        postings_list.append(posting["posting"][0])
-    logger.debug(request.args.get('scan_it'))
-    logger.debug(request.args.get('scan_it') == "true")
-    if request.args.get('scan_it') == "true":
-        posting = task.create_tasks_first_service(
-            boxes_count=1, start_place_id=int(start_place_id),
-            type_id=int(delivery_variant_id), scan_it=True
-        )
-        if posting["status"] != 201:
-            return f"{posting}", 400
-        sleep_timer(2)
-        postings_reponses.append(posting)
-        moving_posting_reponses.append(
-            task.change_status_for_box(
-                str(posting["posting"][0]), int(start_place_id)
-            )
-        )
-        containers_list.append(str(posting["posting"][0]))
-        postings_list.append(posting["posting"][0])
+        cartoon_list.append(str(box_id["box_id"][0]))
+        boxes_list.append(box_id["box_id"][0])
     sleep_timer(3)
-    route_sheet = task.create_route_lists(
-        courier, postings_list, date_time, start_place_id
+    route_list = task.create_route_lists(
+        client_id, boxes_list, date_time, local_warehouse_id
     )
-    if route_sheet["status"] != 201:
-        return f"{route_sheet}", 400
+    if route_list["status"] != 201:
+        return f"{route_list}", 400
     sleep_timer(3)
-    containers_list.append(str(article_boxes["article_boxes"]))
+    cartoon_list.append(str(article_boxes["article_boxes"]))
 
     logger.debug({
         "responses": {
-            "posting": posting,
+            "box_id": box_id,
             "article_boxes": article_boxes,
             "append_postings": append_postings,
             "articles_state": articles_state,
-            "moving_posting_reposne": moving_posting_reposne,
-            "postings_reponses": postings_reponses,
-            "moving_posting_reponses": moving_posting_reponses,
-            "route_sheet": route_sheet
+            "moving_box_response": moving_box_response,
+            "boxes_response": boxes_response,
+            "moving_boxes_response": moving_boxes_response,
+            "route_list": route_list
         }
     })
     return {
-        "Результат": task.load_route_list(route_sheet["trolizonRouteSheetId"]),
-        "Список постингов": postings_list
+        "Result": task.load_route_list(route_list["RouteListId"]),
+        "Boxes list": boxes_list
     }
 
 
 @logger.catch
-@app.route('/receipt_creating_api')
-def receipt_creating_api():
-    paymentId = request.args.get('paymentId', '')
-    smzInn = request.args.get('smzInn', '')
-    receiptId = request.args.get('receiptId', '')
-    createdAt = request.args.get('createdAt', '')
-    updatedAt = request.args.get('updatedAt', '')
-    operationDate = request.args.get('operationDate', '')
-    customerType = request.args.get('customerType', '')
-    positions = request.args.get('positions', '')
-    receiptLink = request.args.get('receiptLink', '')
-    cancellationDate = request.args.get('cancellationDate', '')
-    if not paymentId:
-        return "Введите paymentId", 400
-    if not smzInn:
-        return "Введите smzInn", 400
-    if not receiptId:
-        return "Введите receiptId", 400
-    if not createdAt:
-        return "Введите createdAt", 400
-    if not updatedAt:
-        return "Введите updatedAt", 400
-    if not operationDate:
-        return "Введите operationDate", 400
-    if not customerType:
-        return "Введите customerType", 400
-    if not positions:
-        return "Введите positions", 400
+@app.route('/receipt_creating')
+def receipt_creating():
+    payment_id = request.args.get('payment_id', '')
+    receipt_id = request.args.get('receipt_id', '')
+    created_date = request.args.get('created_date', '')
+    updated_date = request.args.get('updated_date', '')
+    done_date = request.args.get('done_date', '')
+    salary_type = request.args.get('salary_type', '')
+    payment_body = request.args.get('payment_body', '')
+    receipt_link = request.args.get('receipt_link', '')
+    cancellation_date = request.args.get('cancellation_date', '')
+    if not payment_id:
+        return "Enter PaymentID", 400
+    if not receipt_id:
+        return "Enter ReceiptID", 400
+    if not created_date:
+        return "Enter created_date", 400
+    if not updated_date:
+        return "Enter updated_date", 400
+    if not done_date:
+        return "Enter done_date", 400
+    if not salary_type:
+        return "Enter salary_type", 400
+    if not payment_body:
+        return "Enter payment_body", 400
     return task.receipt_creating(
-        paymentId,
-        smzInn,
-        receiptId,
-        createdAt,
-        updatedAt,
-        operationDate,
-        customerType,
-        positions,
-        receiptLink,
-        cancellationDate,
+        payment_id,
+        receipt_id,
+        created_date,
+        updated_date,
+        done_date,
+        salary_type,
+        payment_body,
+        receipt_link,
+        cancellation_date,
     )
 
 
 if __name__ == '__main__':
     # run app in debug mode on port 5000
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    app.run(debug=True, port=8888, host='1.1.1.1')
