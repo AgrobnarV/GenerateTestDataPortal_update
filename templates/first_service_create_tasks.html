@@ -1,12 +1,24 @@
-{% extends  'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Test Data Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+          crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <strong>Generate Test Data Portal</strong>
+        </a>
+    </div>
+</nav>
 
-{% block title %}
-Generate task from 1st service
-{% endblock %}
-
-{% block body %}
-<div class="container px-4 py-5" id="icon-grid"
-     xmlns="http://www.w3.org/1999/html">
+<section class="container px-4 py-5" id="icon-grid">
     <h2 class="pb-2 border-bottom">Create tasks</h2>
     <div class="row">
         <div class="col-sm">
@@ -51,7 +63,8 @@ Generate task from 1st service
                 <p></p>
 
                 <div class="form-group row">
-                    <button type="button" class="col-sm-4 btn btn-outline-success" id="label_coordinates">Task coordinates
+                    <button type="button" class="col-sm-4 btn btn-outline-success" id="label_coordinates">Task
+                        coordinates
                     </button>
                     <div class="col-sm-10 w-25">
                         <input class="form-control" id="latitude"
@@ -86,7 +99,7 @@ Generate task from 1st service
             <p></p>
             <div class="form-group row">
                 <div class="col-sm-10">
-                    <button id="btn" class="btn btn-primary float-end"> Create </button>
+                    <button id="btn" class="btn btn-primary float-end"> Create</button>
                 </div>
             </div>
             <p></p>
@@ -116,79 +129,79 @@ Generate task from 1st service
             </div>
         </div>
     </div>
-</div>
+</section>
+
 <script src="../static/1st_service_create_tasks.js"></script>
 <script src="../static/notifications.js"></script>
 <script>
-        document.getElementById('09872').onclick = function () {
-            document.getElementById('client_id').value = '09872'
-        };
-        document.getElementById('56781').onclick = function () {
-            document.getElementById('client_id').value = '56781'
-        };
-        document.getElementById('34562').onclick = function () {
-            document.getElementById('client_id').value = '34562'
-        };
+    document.getElementById('09872').onclick = function () {
+        document.getElementById('client_id').value = '09872'
+    };
+    document.getElementById('56781').onclick = function () {
+        document.getElementById('client_id').value = '56781'
+    };
+    document.getElementById('34562').onclick = function () {
+        document.getElementById('client_id').value = '34562'
+    };
 
-        document.getElementById('Warehouse 1').onclick = function () {
-            document.getElementById('local_warehouse_id').value = '123456789009';
-            document.getElementById('type_id').value = '1234';
-        };
-        document.getElementById('Warehouse 2').onclick = function () {
-            document.getElementById('local_warehouse_id').value = '098765432122';
-            document.getElementById('type_id').value = '5678';
-        };
+    document.getElementById('Warehouse 1').onclick = function () {
+        document.getElementById('local_warehouse_id').value = '123456789009';
+        document.getElementById('type_id').value = '1234';
+    };
+    document.getElementById('Warehouse 2').onclick = function () {
+        document.getElementById('local_warehouse_id').value = '098765432122';
+        document.getElementById('type_id').value = '5678';
+    };
 
-        function randomRange(min, max) {
-             let cal = (Math.random() * (max - min) + min);
-            return parseFloat(cal.toFixed(6));
-        }
-        document.getElementById('longitude').value = randomRange(37, 38);
+    function randomRange(min, max) {
+         let cal = (Math.random() * (max - min) + min);
+        return parseFloat(cal.toFixed(6));
+    }
+    document.getElementById('longitude').value = randomRange(37, 38);
+    document.getElementById('latitude').value = randomRange(55, 56);
+
+    function get_random (list) {
+         return list[Math.floor((Math.random()*list.length))];
+    }
+
+    function full_name () {
+        const names = ["John", "Peter", "Andrew", "David", "Michael", "William", "Alexander", "Christopher", "Matthew", "Daniel"];
+        const surnames = ["Smith", "Jones", "Williams", "Brown", "Davis", "Wilson", "Johnson", "Miller", "Taylor", "Moore"];
+
+        const name = names[Math.floor(Math.random() * names.length)];
+        const surname = surnames[Math.floor(Math.random() * surnames.length)];
+
+        return `${name} ${surname}`;
+    }
+
+    document.getElementById('client_name').value = full_name ()
+    document.getElementById('label_client_name').onclick = function () {
+       document.getElementById('client_name').value = full_name ()
+    };
+
+    function address() {
+      const countries = ["Russia", "United States", "China", "India", "Brazil"];
+      const cities = ["Moscow", "Saint Petersburg", "New York", "London", "Beijing"];
+      const streets = ["Lenin Street", "Pushkin Street", "Komsomolskaya Street", "Nezavisimosti Street", "Mira Street"];
+      const houseNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
+      const country = countries[Math.floor(Math.random() * countries.length)];
+      const city = cities[Math.floor(Math.random() * cities.length)];
+      const street = streets[Math.floor(Math.random() * streets.length)];
+      const houseNumber = houseNumbers[Math.floor(Math.random() * houseNumbers.length)];
+
+      return `${country}, ${city}, ${street}, ${houseNumber}`;
+    }
+
+    document.getElementById('address').value = address ()
+
+    document.getElementById('label_address').onclick = function () {
+       document.getElementById('address').value = address ()
+    };
+
+     document.getElementById('label_coordinates').onclick = function () {
+       document.getElementById('longitude').value = randomRange(37, 38);
         document.getElementById('latitude').value = randomRange(55, 56);
-
-        function get_random (list) {
-             return list[Math.floor((Math.random()*list.length))];
-        }
-
-        function full_name () {
-            const names = ["John", "Peter", "Andrew", "David", "Michael", "William", "Alexander", "Christopher", "Matthew", "Daniel"];
-            const surnames = ["Smith", "Jones", "Williams", "Brown", "Davis", "Wilson", "Johnson", "Miller", "Taylor", "Moore"];
-
-            const name = names[Math.floor(Math.random() * names.length)];
-            const surname = surnames[Math.floor(Math.random() * surnames.length)];
-
-            return `${name} ${surname}`;
-        }
-
-        document.getElementById('client_name').value = full_name ()
-        document.getElementById('label_client_name').onclick = function () {
-           document.getElementById('client_name').value = full_name ()
-        };
-
-        function address() {
-          const countries = ["Russia", "United States", "China", "India", "Brazil"];
-          const cities = ["Moscow", "Saint Petersburg", "New York", "London", "Beijing"];
-          const streets = ["Lenin Street", "Pushkin Street", "Komsomolskaya Street", "Nezavisimosti Street", "Mira Street"];
-          const houseNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-
-          const country = countries[Math.floor(Math.random() * countries.length)];
-          const city = cities[Math.floor(Math.random() * cities.length)];
-          const street = streets[Math.floor(Math.random() * streets.length)];
-          const houseNumber = houseNumbers[Math.floor(Math.random() * houseNumbers.length)];
-
-          return `${country}, ${city}, ${street}, ${houseNumber}`;
-        }
-
-        document.getElementById('address').value = address ()
-
-        document.getElementById('label_address').onclick = function () {
-           document.getElementById('address').value = address ()
-        };
-
-         document.getElementById('label_coordinates').onclick = function () {
-           document.getElementById('longitude').value = randomRange(37, 38);
-            document.getElementById('latitude').value = randomRange(55, 56);
-        };
+    };
 
 </script>
-{% endblock %}

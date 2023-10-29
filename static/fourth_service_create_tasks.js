@@ -4,7 +4,7 @@ $(function () {
     document.getElementById('log').innerHTML = `Generate is coming <div class="spinner-border spinner-border-sm text-danger" role="status"/>`;
 
     // Make a fetch request to the create_special_boxes endpoint
-    const response = await fetch("4st_service_create_tasks", {
+    const response = await fetch("4th_service_create_tasks", {
       method: "GET",
       timeout: 60000,
       headers: {

@@ -1,12 +1,24 @@
-{% extends  'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Test Data Portal</title>
+    <link crossorigin="anonymous"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+          rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <strong>Generate Test Data Portal</strong>
+        </a>
+    </div>
+</nav>
 
-{% block title %}
-Generate task from 2st service
-{% endblock %}
-
-{% block body %}
-<div class="container px-4 py-5" id="icon-grid"
-     xmlns="http://www.w3.org/1999/html">
+<section class="container px-4 py-5" id="icon-grid">
     <h2 class="pb-2 border-bottom">Create tasks</h2>
     <p></p>
     <div class="row">
@@ -15,7 +27,7 @@ Generate task from 2st service
             <p></p>
             <form class="form-floating">
                 <div class="form-group row">
-                    <label for="client_id" class="col-sm-4 col-form-label">Client ID</label>
+                    <label class="col-sm-4 col-form-label" for="client_id">Client ID</label>
                     <div class="col-sm-10 w-50">
                         <input class="form-control" id="client_id"
                                placeholder="123456">
@@ -23,10 +35,10 @@ Generate task from 2st service
                 </div>
                 <p></p>
                 <div class="form-group row">
-                    <label for="client_id" class="col-sm-4 col-form-label">Payment type</label>
+                    <label class="col-sm-4 col-form-label" for="client_id">Payment type</label>
                     <div class="col-sm-10 w-50">
-                        <select id="payment_type" class="form-select"
-                                aria-label="Default select example">
+                        <select aria-label="Default select example" class="form-select"
+                                id="payment_type">
                             <option selected value="Prepaid">Prepayment type
                             </option>
                             <option value="Postpaid">Postpayment type</option>
@@ -35,8 +47,8 @@ Generate task from 2st service
                 </div>
                 <p></p>
                 <div class="form-group row">
-                    <label for="local_warehouse_id"
-                           class="col-sm-4 col-form-label">Local warehouse</label>
+                    <label class="col-sm-4 col-form-label"
+                           for="local_warehouse_id">Local warehouse</label>
                     <div class="col-sm-10 w-50">
                         <input class="form-control" id="local_warehouse_id"
                                placeholder="12345678909876">
@@ -44,8 +56,8 @@ Generate task from 2st service
                 </div>
                 <p></p>
                 <div class="form-group row">
-                    <label for="type_id"
-                           class="col-sm-4 col-form-label">Type ID</label>
+                    <label class="col-sm-4 col-form-label"
+                           for="type_id">Type ID</label>
                     <div class="col-sm-10 w-50">
                         <input class="form-control" id="type_id"
                                placeholder="45645676567767">
@@ -53,18 +65,18 @@ Generate task from 2st service
                 </div>
                 <p></p>
                 <div class="form-group row">
-                    <label for="boxes_count"
-                           class="col-sm-4 col-form-label">Box count </label>
+                    <label class="col-sm-4 col-form-label"
+                           for="boxes_count">Box count </label>
                     <div class="col-sm-10 w-50">
-                        <input type="number" class="form-control" id="boxes_count"
-                               placeholder="Boxes count" value="1">
+                        <input class="form-control" id="boxes_count" placeholder="Boxes count"
+                               type="number" value="1">
                     </div>
                 </div>
             </form>
             <p></p>
             <div class="form-group row">
                 <div class="col-sm-10">
-                    <button id="btn" class="btn btn-primary float-end"> Create</button>
+                    <button class="btn btn-primary float-end" id="btn"> Create</button>
                 </div>
             </div>
             <p></p>
@@ -73,28 +85,29 @@ Generate task from 2st service
         <div class="col-sm">
             <label class="col-sm-4 col-form-label">Click to warehouse for generate client tasks </label>
             <div class="list-group">
-                <button type="button" id="Warehouse 1"
-                        class="list-group-item list-group-item-action"> Warehouse 1 123456789009
+                <button class="list-group-item list-group-item-action" id="Warehouse 1"
+                        type="button"> Warehouse 1 123456789009
                 </button>
-                <button type="button" id="Warehouse 2"
-                        class="list-group-item list-group-item-action"> Warehouse 2 098765432122
+                <button class="list-group-item list-group-item-action" id="Warehouse 2"
+                        type="button"> Warehouse 2 098765432122
                 </button>
             </div>
             <label class="col-sm-4 col-form-label">Clients</label>
             <div class="list-group">
-                <button type="button" id="09872"
-                        class="list-group-item list-group-item-action"> Loui Haley
+                <button class="list-group-item list-group-item-action" id="09872"
+                        type="button"> Loui Haley
                 </button>
-                <button type="button" id="56781"
-                        class="list-group-item list-group-item-action"> Kajus Garner
+                <button class="list-group-item list-group-item-action" id="56781"
+                        type="button"> Kajus Garner
                 </button>
-                <button type="button" id="34562"
-                        class="list-group-item list-group-item-action"> Dulcie Hood
+                <button class="list-group-item list-group-item-action" id="34562"
+                        type="button"> Dulcie Hood
                 </button>
             </div>
         </div>
     </div>
-</div>
+</section>
+
 <script src="../static/2st_service_create_tasks.js"></script>
 <script src="../static/notifications.js"></script>
 <script>
@@ -116,6 +129,4 @@ Generate task from 2st service
         document.getElementById('local_warehouse_id').value = '098765432122';
         document.getElementById('type_id').value = '5678';
     };
-
 </script>
-{% endblock %}
